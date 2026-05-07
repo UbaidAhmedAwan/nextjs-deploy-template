@@ -1,6 +1,8 @@
 # nextjs-deploy-template
 
-A small, opinionated Next.js 14 starter wired up the way I actually ship Node apps to AWS: standalone Docker build, image to ECR, rolling redeploy on ECS via the AWS CLI. No Terraform, no CDK, no CloudFormation — the infrastructure is provisioned once in the console and the pipeline only owns the application lifecycle.
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE) [![Next.js 14](https://img.shields.io/badge/Next.js-14-black.svg?style=flat-square)](https://nextjs.org) [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6.svg?style=flat-square)](https://www.typescriptlang.org) [![AWS ECS](https://img.shields.io/badge/AWS-ECS-FF9900.svg?style=flat-square)](https://aws.amazon.com/ecs/) [![Docker](https://img.shields.io/badge/Docker-multi--stage-2496ED.svg?style=flat-square)](https://www.docker.com)
+
+A small, opinionated Next.js 14 starter wired up the way I actually ship Node apps to AWS: standalone Docker build, image to ECR, rolling redeploy on ECS via the AWS CLI. No Terraform, no CDK, no CloudFormation. The infrastructure is provisioned once in the console and the pipeline only owns the application lifecycle.
 
 ## Stack
 
@@ -9,7 +11,7 @@ A small, opinionated Next.js 14 starter wired up the way I actually ship Node ap
 - **ESLint + Prettier**
 - **Docker** multi-stage build, `output: 'standalone'`
 - **GitHub Actions** for CI (lint / typecheck / build) and deploy (ECR + ECS)
-- **AWS CLI** for the deploy step — `aws ecs update-service --force-new-deployment`
+- **AWS CLI** for the deploy step (`aws ecs update-service --force-new-deployment`)
 
 ## Run locally
 
@@ -54,7 +56,7 @@ export ECS_SERVICE=nextjs-deploy-template
 
 A few choices that aren't obvious from the file tree:
 
-- **`output: 'standalone'`** — Next traces only the modules the server actually imports and copies them into `.next/standalone`. The runtime image stays small and you don't need `node_modules` in the container.
+- **`output: 'standalone'`**: Next traces only the modules the server actually imports and copies them into `.next/standalone`. The runtime image stays small and you don't need `node_modules` in the container.
 - **`/api/health` is a Route Handler, not a separate service.** The same Node process serves pages and the health endpoint, which is what the ALB target group hits. One process to watch, one log stream.
 - **Force `dynamic` on the health route.** Otherwise Next would render it once at build time and `uptime` would lie about the running container.
 - **`update-service --force-new-deployment` over rendering a new task definition.** The task def pins to `:latest`, so forcing a deployment is enough for a rolling update. Pin to immutable tags and render a new revision per deploy if you need point-in-time rollbacks; this template optimises for simplicity.
@@ -80,4 +82,13 @@ docker-compose.yml       # parity check for the production image
 
 ## What this is not
 
-It's not a starter for serverless Next on Vercel — if that's the target, delete the Dockerfile and workflows and you're done. It's not a monorepo template. It doesn't set up a database, a queue, or auth. Add those when you actually need them.
+It's not a starter for serverless Next on Vercel; if that's the target, delete the Dockerfile and workflows and you're done. It's not a monorepo template. It doesn't set up a database, a queue, or auth. Add those when you actually need them.
+
+## Author
+
+Built by **Ubaid Ahmed Awan**, Senior Full-Stack Engineer.
+Solo engineer at [Signal](https://www.learnsignal.com), where I built and maintain Learnsignal: marketing site, custom Next.js LMS, Stripe billing, study planner, and course delivery for ACCA, CIMA, and AAT learners.
+
+- Portfolio: [ubaidahmedawan.github.io](https://ubaidahmedawan.github.io)
+- LinkedIn: [linkedin.com/in/ubaidahmedawan](https://linkedin.com/in/ubaidahmedawan)
+- GitHub: [@UbaidAhmedAwan](https://github.com/UbaidAhmedAwan)
