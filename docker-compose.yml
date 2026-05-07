@@ -1,0 +1,12 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nextjs-deploy-template:local
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_APP_NAME: Next.js Deploy Template
+    restart: unless-stopped
